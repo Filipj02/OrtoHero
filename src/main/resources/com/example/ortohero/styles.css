@@ -1,0 +1,161 @@
+.root {
+    -fx-font-family: 'Noto Sans', 'Open Sans', 'Arial';
+    -fx-background-color: #1e272e;
+    -fx-text-fill: white;
+}
+
+.canvas {
+    -fx-border-color: #2d3436;
+}
+
+.hud-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.35);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+}
+
+.hud-lives {
+    -fx-font-size: 16px;
+    -fx-text-fill: #ff7979;
+}
+
+.hud-text {
+    -fx-text-fill: #f5f6fa;
+    -fx-font-size: 13px;
+}
+
+.hud-xp > .bar {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.hud-xp > .bar > .track {
+    -fx-background-color: transparent;
+}
+
+.hud-xp > .bar > .chunk {
+    -fx-background-color: linear-gradient(to right, #74b9ff, #0984e3);
+}
+
+.inventory-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-padding: 12;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.inventory-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.3);
+    -fx-border-radius: 6;
+}
+
+.inventory-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.inventory-title {
+    -fx-text-fill: #f5f6fa;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.inventory-item {
+    -fx-text-fill: #dcdde1;
+    -fx-padding: 6 4 6 4;
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-background-radius: 6;
+}
+
+.inventory-empty {
+    -fx-text-fill: rgba(255,255,255,0.6);
+    -fx-font-style: italic;
+}
+
+.task-dialog {
+    -fx-background-color: rgba(20, 24, 28, 0.95);
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-border-color: #74b9ff;
+    -fx-border-width: 2;
+    -fx-min-width: 480px;
+}
+
+.task-header {
+    -fx-spacing: 4;
+}
+
+.task-header > .label {
+    -fx-text-fill: #f6f6f6;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.task-words {
+    -fx-padding: 12 0 12 0;
+}
+
+.task-word-row {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 8;
+    -fx-padding: 8;
+}
+
+.task-word-incorrect {
+    -fx-background-color: rgba(255, 118, 117, 0.4);
+}
+
+.task-pattern {
+    -fx-text-fill: #ffeaa7;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 160px;
+}
+
+.task-answer {
+    -fx-background-color: rgba(0,0,0,0.3);
+    -fx-text-fill: #f6f6f6;
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.task-items .button {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-text-fill: #f6f6f6;
+    -fx-background-radius: 6;
+}
+
+.task-info {
+    -fx-text-fill: #dfe6e9;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+.task-info-success {
+    -fx-text-fill: #55efc4;
+}
+
+.task-info-error {
+    -fx-text-fill: #ff7675;
+}
+
+.pause-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-padding: 24;
+    -fx-spacing: 12;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.pause-title {
+    -fx-text-fill: #f1f2f6;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.game-message {
+    -fx-text-fill: #dfe6e9;
+    -fx-padding: 12;
+    -fx-font-size: 14px;
+}
