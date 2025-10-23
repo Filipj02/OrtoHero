@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,17 +208,6 @@ public class TaskDialog extends BorderPane {
         dialog.setTitle("Różdżka");
         dialog.setHeaderText("Wybierz słowo do podmiany");
         dialog.setContentText("Słowo:");
-        dialog.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(WordRow object) {
-                return object == null ? "" : object.getTaskWord().getEntry().getPattern();
-            }
-
-            @Override
-            public WordRow fromString(String string) {
-                return null;
-            }
-        });
         Optional<WordRow> selection = dialog.showAndWait();
         if (selection.isPresent()) {
             WordRow selected = selection.get();
@@ -288,17 +276,6 @@ public class TaskDialog extends BorderPane {
         dialog.setTitle("Pióro Mądrości");
         dialog.setHeaderText("Wybierz słowo do odsłonięcia litery");
         dialog.setContentText("Słowo:");
-        dialog.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(WordRow object) {
-                return object == null ? "" : object.getTaskWord().getEntry().getPattern();
-            }
-
-            @Override
-            public WordRow fromString(String string) {
-                return null;
-            }
-        });
         Optional<WordRow> selection = dialog.showAndWait();
         if (selection.isPresent()) {
             if (inventory.getQuantity(ItemType.FEATHER) <= 0) {
@@ -396,6 +373,11 @@ public class TaskDialog extends BorderPane {
 
         public void refreshAnswer() {
             answerField.setText(taskWord.getAnswer());
+        }
+
+        @Override
+        public String toString() {
+            return taskWord == null ? "" : taskWord.getEntry().getPattern();
         }
 
         public void setIncorrect(boolean incorrect) {
