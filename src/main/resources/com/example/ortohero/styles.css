@@ -85,12 +85,6 @@
     -fx-spacing: 4;
 }
 
-.task-dialog-header {
-    -fx-text-fill: #f6f6f6;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-}
-
 .task-header > .label {
     -fx-text-fill: #f6f6f6;
     -fx-font-size: 18px;
@@ -144,16 +138,6 @@
 
 .task-info-error {
     -fx-text-fill: #ff7675;
-}
-
-.task-selection-dialog {
-    -fx-background-color: rgba(20, 24, 28, 0.98);
-}
-
-.task-selection-actions .button {
-    -fx-background-color: rgba(255,255,255,0.1);
-    -fx-text-fill: #f6f6f6;
-    -fx-background-radius: 6;
 }
 
 .pause-overlay {

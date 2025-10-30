@@ -1,20 +1,15 @@
 package com.example.ortohero;
 
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -210,12 +205,22 @@ public class TaskDialog extends BorderPane {
             showInfo("Brak trudnych słów do podmiany.", false);
             return;
         }
-        Optional<WordRow> selection = showWordSelectionDialog(
-                "Różdżka",
-                "Wybierz słowo do podmiany",
-                eligible,
-                eligible.get(0)
-        );
+        ChoiceDialog<WordRow> dialog = new ChoiceDialog<>(eligible.get(0), eligible);
+        dialog.setTitle("Różdżka");
+        dialog.setHeaderText("Wybierz słowo do podmiany");
+        dialog.setContentText("Słowo:");
+        dialog.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(WordRow object) {
+                return object == null ? "" : object.getTaskWord().getEntry().getPattern();
+            }
+
+            @Override
+            public WordRow fromString(String string) {
+                return null;
+            }
+        });
+        Optional<WordRow> selection = dialog.showAndWait();
         if (selection.isPresent()) {
             WordRow selected = selection.get();
             if (inventory.getQuantity(ItemType.WAND) <= 0) {
@@ -279,12 +284,22 @@ public class TaskDialog extends BorderPane {
         if (rows.isEmpty()) {
             return;
         }
-        Optional<WordRow> selection = showWordSelectionDialog(
-                "Pióro Mądrości",
-                "Wybierz słowo do odsłonięcia litery",
-                rows,
-                rows.get(0)
-        );
+        ChoiceDialog<WordRow> dialog = new ChoiceDialog<>(rows.get(0), rows);
+        dialog.setTitle("Pióro Mądrości");
+        dialog.setHeaderText("Wybierz słowo do odsłonięcia litery");
+        dialog.setContentText("Słowo:");
+        dialog.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(WordRow object) {
+                return object == null ? "" : object.getTaskWord().getEntry().getPattern();
+            }
+
+            @Override
+            public WordRow fromString(String string) {
+                return null;
+            }
+        });
+        Optional<WordRow> selection = dialog.showAndWait();
         if (selection.isPresent()) {
             if (inventory.getQuantity(ItemType.FEATHER) <= 0) {
                 showInfo("Nie masz Pióra Mądrości.", false);
@@ -346,79 +361,6 @@ public class TaskDialog extends BorderPane {
         } else {
             hintButton.setDisable(!session.useHintAvailable());
         }
-    }
-
-    private Optional<WordRow> showWordSelectionDialog(String title,
-                                                      String header,
-                                                      List<WordRow> options,
-                                                      WordRow defaultSelection) {
-        if (options.isEmpty()) {
-            return Optional.empty();
-        }
-
-        Stage dialogStage = new Stage();
-        dialogStage.setTitle(title);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        if (getScene() != null && getScene().getWindow() != null) {
-            dialogStage.initOwner(getScene().getWindow());
-        }
-
-        Label headerLabel = new Label(header);
-        headerLabel.getStyleClass().add("task-dialog-header");
-
-        ListView<WordRow> listView = new ListView<>(FXCollections.observableArrayList(options));
-        listView.setCellFactory(list -> new ListCell<WordRow>() {
-            @Override
-            protected void updateItem(WordRow item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.toString());
-                }
-            }
-        });
-        listView.setPrefHeight(Math.min(240, options.size() * 48 + 24));
-
-        if (defaultSelection != null) {
-            listView.getSelectionModel().select(defaultSelection);
-            listView.scrollTo(defaultSelection);
-        }
-
-        Button confirmButton = new Button("Wybierz");
-        Button cancelButton = new Button("Anuluj");
-        confirmButton.setDefaultButton(true);
-        cancelButton.setCancelButton(true);
-        confirmButton.disableProperty().bind(listView.getSelectionModel().selectedItemProperty().isNull());
-
-        final WordRow[] selection = new WordRow[1];
-        confirmButton.setOnAction(evt -> {
-            selection[0] = listView.getSelectionModel().getSelectedItem();
-            dialogStage.close();
-        });
-        cancelButton.setOnAction(evt -> {
-            selection[0] = null;
-            dialogStage.close();
-        });
-
-        HBox buttons = new HBox(8, confirmButton, cancelButton);
-        buttons.setAlignment(Pos.CENTER_RIGHT);
-        buttons.getStyleClass().add("task-selection-actions");
-
-        VBox root = new VBox(12, headerLabel, listView, buttons);
-        root.setPadding(new Insets(16));
-        root.setPrefWidth(360);
-        root.getStyleClass().add("task-selection-dialog");
-
-        Scene scene = new Scene(root);
-        if (getScene() != null) {
-            scene.getStylesheets().addAll(getScene().getStylesheets());
-        }
-        dialogStage.setScene(scene);
-        dialogStage.setResizable(false);
-        dialogStage.showAndWait();
-
-        return Optional.ofNullable(selection[0]);
     }
 
     private static class WordRow {
