@@ -398,6 +398,11 @@ public class TaskDialog extends BorderPane {
             answerField.setText(taskWord.getAnswer());
         }
 
+        @Override
+        public String toString() {
+            return taskWord == null ? "" : taskWord.getEntry().getPattern();
+        }
+
         public void setIncorrect(boolean incorrect) {
             if (incorrect) {
                 container.getStyleClass().add("task-word-incorrect");
