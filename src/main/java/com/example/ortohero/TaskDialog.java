@@ -1,17 +1,17 @@
 package com.example.ortohero;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.collections.FXCollections;
 import javafx.scene.Node;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Dialog;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -352,15 +352,22 @@ public class TaskDialog extends BorderPane {
                                                       String header,
                                                       List<WordRow> options,
                                                       WordRow defaultSelection) {
-        Dialog<WordRow> dialog = new Dialog<>();
-        dialog.setTitle(title);
-        dialog.setHeaderText(header);
+        if (options.isEmpty()) {
+            return Optional.empty();
+        }
 
-        ButtonType confirmType = new ButtonType("Wybierz", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmType, ButtonType.CANCEL);
+        Stage dialogStage = new Stage();
+        dialogStage.setTitle(title);
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        if (getScene() != null && getScene().getWindow() != null) {
+            dialogStage.initOwner(getScene().getWindow());
+        }
+
+        Label headerLabel = new Label(header);
+        headerLabel.getStyleClass().add("task-dialog-header");
 
         ListView<WordRow> listView = new ListView<>(FXCollections.observableArrayList(options));
-        listView.setCellFactory(list -> new ListCell<>() {
+        listView.setCellFactory(list -> new ListCell<WordRow>() {
             @Override
             protected void updateItem(WordRow item, boolean empty) {
                 super.updateItem(item, empty);
@@ -371,23 +378,47 @@ public class TaskDialog extends BorderPane {
                 }
             }
         });
+        listView.setPrefHeight(Math.min(240, options.size() * 48 + 24));
+
         if (defaultSelection != null) {
             listView.getSelectionModel().select(defaultSelection);
             listView.scrollTo(defaultSelection);
         }
-        dialog.getDialogPane().setContent(listView);
 
-        Node confirmButton = dialog.getDialogPane().lookupButton(confirmType);
+        Button confirmButton = new Button("Wybierz");
+        Button cancelButton = new Button("Anuluj");
+        confirmButton.setDefaultButton(true);
+        cancelButton.setCancelButton(true);
         confirmButton.disableProperty().bind(listView.getSelectionModel().selectedItemProperty().isNull());
 
-        dialog.setResultConverter(button -> {
-            if (button == confirmType) {
-                return listView.getSelectionModel().getSelectedItem();
-            }
-            return null;
+        final WordRow[] selection = new WordRow[1];
+        confirmButton.setOnAction(evt -> {
+            selection[0] = listView.getSelectionModel().getSelectedItem();
+            dialogStage.close();
+        });
+        cancelButton.setOnAction(evt -> {
+            selection[0] = null;
+            dialogStage.close();
         });
 
-        return dialog.showAndWait();
+        HBox buttons = new HBox(8, confirmButton, cancelButton);
+        buttons.setAlignment(Pos.CENTER_RIGHT);
+        buttons.getStyleClass().add("task-selection-actions");
+
+        VBox root = new VBox(12, headerLabel, listView, buttons);
+        root.setPadding(new Insets(16));
+        root.setPrefWidth(360);
+        root.getStyleClass().add("task-selection-dialog");
+
+        Scene scene = new Scene(root);
+        if (getScene() != null) {
+            scene.getStylesheets().addAll(getScene().getStylesheets());
+        }
+        dialogStage.setScene(scene);
+        dialogStage.setResizable(false);
+        dialogStage.showAndWait();
+
+        return Optional.ofNullable(selection[0]);
     }
 
     private static class WordRow {
